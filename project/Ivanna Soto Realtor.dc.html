@@ -23,6 +23,20 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
 @keyframes scrollDot{0%{transform:translateY(0);opacity:0;}30%{opacity:1;}100%{transform:translateY(14px);opacity:0;}}
 @keyframes kenBurns{from{transform:scale(1) translateX(0);}to{transform:scale(1.07) translateX(-2.5%);}}
 
+/* === NAV: fondo al scrollear sobre secciones claras === */
+.staggered-menu-header{transition:background .35s ease,box-shadow .35s ease,backdrop-filter .35s ease;}
+.staggered-menu-header.nav-scrolled{
+  background:rgba(251,246,238,0.96)!important;
+  backdrop-filter:blur(14px)!important;
+  -webkit-backdrop-filter:blur(14px)!important;
+  box-shadow:0 1px 22px rgba(58,42,28,.08)!important;
+}
+/* Botón "Menu" y logo se vuelven oscuros sobre fondo claro */
+.staggered-menu-header.nav-scrolled .sm-toggle{color:#3A2A1C!important;}
+.staggered-menu-header.nav-scrolled .sm-logo-img{
+  filter:brightness(0.1) sepia(1) saturate(5) hue-rotate(15deg)!important;
+}
+
 /* =====================================================
    MOBILE RESPONSIVE — ajustes condicionales ≤767px
    Desktop permanece intacto (sin !important en base)
@@ -414,6 +428,20 @@ class Component extends DCLogic {
       this.setState({ loaded: true, gone: true });
     }
 
+    // Nav: agrega fondo al scrollear fuera del hero (logo y botón visibles sobre secciones claras)
+    setTimeout(() => {
+      const header = document.querySelector('.staggered-menu-header');
+      if (!header) return;
+      const hero = document.getElementById('inicio');
+      const updateNav = () => {
+        const threshold = hero ? hero.offsetHeight * 0.75 : window.innerHeight * 0.75;
+        header.classList.toggle('nav-scrolled', window.scrollY > threshold);
+      };
+      window.addEventListener('scroll', updateNav, { passive: true });
+      updateNav();
+      this._cleanNav = () => window.removeEventListener('scroll', updateNav);
+    }, 600);
+
     // Video: autoplay en desktop, omitir en mobile para ahorrar datos
     setTimeout(() => {
       const v = document.getElementById('heroVideo');
@@ -437,6 +465,7 @@ class Component extends DCLogic {
     clearInterval(this.wordTimer);
     if (this._raf) cancelAnimationFrame(this._raf);
     if (this._gsapPoll) clearInterval(this._gsapPoll);
+    if (this._cleanNav) this._cleanNav();
   }
 
   runLoader() {
