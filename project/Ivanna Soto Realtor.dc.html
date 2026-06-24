@@ -21,25 +21,91 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
 @keyframes marqueeScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 @keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
 @keyframes scrollDot{0%{transform:translateY(0);opacity:0;}30%{opacity:1;}100%{transform:translateY(14px);opacity:0;}}
+@keyframes kenBurns{from{transform:scale(1) translateX(0);}to{transform:scale(1.07) translateX(-2.5%);}}
+
+/* =====================================================
+   MOBILE RESPONSIVE — ajustes condicionales ≤767px
+   Desktop permanece intacto (sin !important en base)
+   ===================================================== */
+@media(max-width:767px){
+
+  /* 1 · LOADING SCREEN */
+  #ls{padding:28px 24px !important;}
+  #ls-word{font-size:clamp(28px,8vw,72px)!important;word-break:break-word!important;overflow-wrap:break-word!important;}
+  #ls-bar-row{flex-direction:column!important;align-items:flex-start!important;gap:4px!important;margin-bottom:10px!important;}
+  #ls-bottom-label{font-size:9px!important;letter-spacing:.10em!important;}
+  #ls-count{font-size:22px!important;}
+
+  /* 2 · HERO — video pesado reemplazado por imagen Ken Burns */
+  #heroVideo{display:none!important;}
+  #hero-mobile-bg{display:block!important;animation:kenBurns 14s ease-in-out infinite alternate;}
+  #hero-content{padding:0 5vw 7vh!important;}
+  #scroll-ind{display:none!important;}
+
+  /* 3 · MITOS VS REALIDAD — colapsa a 1 columna, elimina flechas */
+  #mr1,#mr2,#mr3{grid-template-columns:1fr!important;border-radius:18px!important;}
+  #mr1-arrow,#mr2-arrow,#mr3-arrow{display:none!important;}
+  /* Row 2 reordering: Mito primero, Realidad segundo */
+  #mr2-mito{order:0!important;}
+  #mr2-realidad{order:1!important;}
+
+  /* 4 · SOBRE IVANNA — colapsa a 1 columna */
+  #sobre-g{grid-template-columns:1fr!important;}
+  /* Badge flotante no desborda sobre el texto */
+  #sobre-badge{left:12px!important;bottom:-10px!important;}
+  #sobre-reveal-left{margin-bottom:44px!important;}
+
+  /* 5 · BENTO GRID — 1 columna en mobile */
+  #bento-g{grid-template-columns:1fr!important;}
+  #bento-big{grid-column:span 1!important;grid-row:span 1!important;min-height:260px!important;}
+  #bento-wide{grid-column:span 1!important;}
+  #bento-s1,#bento-s2{grid-column:span 1!important;}
+
+  /* 6 · COMUNIDAD — apilado vertical */
+  #com-grid{grid-template-columns:1fr!important;}
+
+  /* 7 · PARALLAX GALLERY — 1 columna, columna central sin offset inicial */
+  #par-grid{grid-template-columns:1fr!important;margin-top:40px!important;}
+  #par-col-mid{transform:none!important;}
+
+  /* 8 · MARQUEE FOOTER — velocidad reducida para legibilidad */
+  #marquee-inner{animation-duration:50s!important;}
+
+  /* 9 · MOBILE STICKY CTA — visible solo en mobile */
+  #m-cta{display:flex!important;}
+
+  /* Espacio para que el sticky CTA no tape el footer */
+  footer{padding-bottom:80px!important;}
+}
+
+/* Tablet (640-1023) — ajustes suaves sin romper desktop */
+@media(min-width:640px) and (max-width:1023px){
+  #mr1,#mr2,#mr3{grid-template-columns:1fr auto 1fr!important;}
+  #bento-g{grid-template-columns:repeat(2,1fr)!important;}
+  #bento-big{grid-column:span 2!important;grid-row:span 1!important;}
+  #bento-wide{grid-column:span 2!important;}
+  #com-grid{grid-template-columns:1fr!important;}
+  #par-grid{grid-template-columns:repeat(2,1fr)!important;}
+}
 </style>
 </helmet>
 
 <div style="position:relative;width:100%;overflow:hidden;">
 
 <!-- ============ LOADING SCREEN ============ -->
-<div style="position:fixed;inset:0;z-index:9999;background:radial-gradient(120% 120% at 30% 20%, #3A2818 0%, #271A10 60%, #1F140C 100%);display:{{ loaderDisplay }};flex-direction:column;justify-content:space-between;padding:48px;opacity:{{ loaderOpacity }};pointer-events:{{ loaderPE }};transition:opacity .7s ease;">
+<div id="ls" style="position:fixed;inset:0;z-index:9999;background:radial-gradient(120% 120% at 30% 20%, #3A2818 0%, #271A10 60%, #1F140C 100%);display:{{ loaderDisplay }};flex-direction:column;justify-content:space-between;padding:48px;opacity:{{ loaderOpacity }};pointer-events:{{ loaderPE }};transition:opacity .7s ease;">
   <div style="display:flex;justify-content:space-between;align-items:center;color:#E7CF96;">
     <div style="font-family:'Newsreader',serif;font-size:18px;letter-spacing:.18em;">IVANNA&nbsp;SOTO</div>
     <div style="font-family:'Figtree';font-size:11px;letter-spacing:.32em;color:rgba(231,207,150,.6);">GA · FL</div>
   </div>
   <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
     <div style="font-family:'Figtree';font-size:12px;letter-spacing:.3em;color:rgba(231,207,150,.55);text-transform:uppercase;">Cargando</div>
-    <div style="font-family:'Newsreader',serif;font-style:italic;font-weight:500;font-size:clamp(44px,9vw,108px);line-height:1;color:#FBF6EE;">{{ word }}</div>
+    <div id="ls-word" style="font-family:'Newsreader',serif;font-style:italic;font-weight:500;font-size:clamp(44px,9vw,108px);line-height:1;color:#FBF6EE;">{{ word }}</div>
   </div>
   <div>
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px;">
-      <div style="font-family:'Figtree';font-size:12px;letter-spacing:.22em;color:rgba(231,207,150,.55);">TU CASA PROPIA, MÁS CERCA</div>
-      <div style="font-family:'Newsreader',serif;font-size:40px;color:#E7CF96;line-height:1;">{{ count }}<span style="font-size:18px;opacity:.6;">%</span></div>
+    <div id="ls-bar-row" style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px;">
+      <div id="ls-bottom-label" style="font-family:'Figtree';font-size:12px;letter-spacing:.22em;color:rgba(231,207,150,.55);">TU CASA PROPIA, MÁS CERCA</div>
+      <div id="ls-count" style="font-family:'Newsreader',serif;font-size:40px;color:#E7CF96;line-height:1;">{{ count }}<span style="font-size:18px;opacity:.6;">%</span></div>
     </div>
     <div style="height:2px;width:100%;background:rgba(231,207,150,.18);border-radius:2px;overflow:hidden;">
       <div style="height:100%;width:{{ count }}%;background:linear-gradient(90deg,#BD933F,#E7CF96);transition:width .12s linear;"></div>
@@ -52,30 +118,35 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
 
 <!-- ============ HERO ============ -->
 <section id="inicio" data-screen-label="Hero" style="position:relative;height:100vh;min-height:640px;width:100%;overflow:hidden;display:flex;align-items:flex-end;">
-  <video id="heroVideo" autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+  <!-- Desktop: video Atlanta — Mobile: imagen Ken Burns (ver CSS) -->
+  <video id="heroVideo" autoplay muted loop playsinline poster="assets/house-exterior.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
     <source src="assets/hero.mp4" type="video/mp4">
   </video>
+  <!-- Fallback para mobile (oculto en desktop vía CSS) -->
+  <img id="hero-mobile-bg" src="assets/house-exterior.png" alt="" loading="eager" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;">
+
   <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(46,30,16,.42) 0%, rgba(46,30,16,.30) 38%, rgba(40,26,14,.74) 100%);"></div>
   <div style="position:absolute;inset:0;background:radial-gradient(80% 60% at 20% 80%, rgba(58,38,20,.45), transparent 70%);"></div>
 
-  <div style="position:relative;z-index:5;width:100%;max-width:1280px;margin:0 auto;padding:0 7vw 8vh;">
+  <div id="hero-content" style="position:relative;z-index:5;width:100%;max-width:1280px;margin:0 auto;padding:0 7vw 8vh;">
     <div data-hero-fade style="display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border:1px solid rgba(231,207,150,.45);border-radius:999px;margin-bottom:26px;backdrop-filter:blur(4px);">
-      <span style="width:7px;height:7px;border-radius:50%;background:#E7CF96;"></span>
+      <span style="width:7px;height:7px;border-radius:50%;background:#E7CF96;flex-shrink:0;"></span>
       <span style="font-family:'Figtree';font-weight:500;font-size:12.5px;letter-spacing:.22em;color:#F4E8CF;text-transform:uppercase;">Real Estate &amp; Lifestyle Creator · GA &amp; FL</span>
     </div>
-    <h1 style="font-family:'Newsreader',serif;font-weight:500;color:#FBF6EE;font-size:clamp(40px,6.6vw,92px);line-height:1.02;letter-spacing:-.01em;margin:0;max-width:16ch;text-wrap:balance;">
+    <h1 style="font-family:'Newsreader',serif;font-weight:500;color:#FBF6EE;font-size:clamp(36px,6.6vw,92px);line-height:1.02;letter-spacing:-.01em;margin:0;max-width:16ch;text-wrap:balance;">
       <span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;">Tu&nbsp;</span></span><span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;">sueño&nbsp;</span></span><span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;">de&nbsp;</span></span><span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;">tener&nbsp;</span></span>
       <span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;font-style:italic;color:#E7CF96;">casa&nbsp;</span></span><span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;font-style:italic;color:#E7CF96;">propia&nbsp;</span></span>
       <span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;">está&nbsp;</span></span><span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;">más&nbsp;</span></span><span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;">cerca&nbsp;</span></span><span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;">de&nbsp;</span></span><span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;">lo&nbsp;</span></span><span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;">que&nbsp;</span></span><span style="display:inline-block;overflow:hidden;"><span data-hero-word style="display:inline-block;">imaginas.</span></span>
     </h1>
-    <p data-hero-fade style="font-family:'Figtree';font-weight:400;font-size:clamp(16px,1.6vw,20px);color:rgba(244,232,207,.92);margin:24px 0 36px;max-width:40ch;line-height:1.55;">Realtor de confianza en Georgia &amp; Florida. Acompaño a familias inmigrantes y latinas a comprar su primera casa, en español y sin miedo.</p>
+    <p data-hero-fade style="font-family:'Figtree';font-weight:400;font-size:clamp(15px,1.6vw,20px);color:rgba(244,232,207,.92);margin:24px 0 36px;max-width:40ch;line-height:1.55;">Realtor de confianza en Georgia &amp; Florida. Acompaño a familias inmigrantes y latinas a comprar su primera casa, en español y sin miedo.</p>
     <div data-hero-fade style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;">
-      <a href="#contacto" style="display:inline-flex;align-items:center;gap:10px;padding:16px 30px;background:#BD933F;color:#FFFDF8;border-radius:999px;font-family:'Figtree';font-weight:600;font-size:16px;text-decoration:none;box-shadow:0 14px 38px rgba(189,147,63,.4);transition:all .2s;" style-hover="background:#A87D2E;transform:translateY(-2px);">Comienza Tu Camino <span style="font-size:18px;">→</span></a>
-      <a href="#propiedades" style="display:inline-flex;align-items:center;gap:10px;padding:16px 28px;background:rgba(255,253,248,.08);color:#FBF6EE;border:1.5px solid rgba(251,246,238,.45);border-radius:999px;font-family:'Figtree';font-weight:600;font-size:16px;text-decoration:none;backdrop-filter:blur(6px);transition:all .2s;" style-hover="background:rgba(255,253,248,.18);">Ver propiedades</a>
+      <a href="#contacto" style="display:inline-flex;align-items:center;gap:10px;padding:15px 28px;background:#BD933F;color:#FFFDF8;border-radius:999px;font-family:'Figtree';font-weight:600;font-size:16px;text-decoration:none;box-shadow:0 14px 38px rgba(189,147,63,.4);transition:all .2s;" style-hover="background:#A87D2E;transform:translateY(-2px);">Comienza Tu Camino <span style="font-size:18px;">→</span></a>
+      <a href="#propiedades" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;background:rgba(255,253,248,.08);color:#FBF6EE;border:1.5px solid rgba(251,246,238,.45);border-radius:999px;font-family:'Figtree';font-weight:600;font-size:16px;text-decoration:none;backdrop-filter:blur(6px);transition:all .2s;" style-hover="background:rgba(255,253,248,.18);">Ver propiedades</a>
     </div>
   </div>
 
-  <div style="position:absolute;right:7vw;bottom:7vh;z-index:5;display:flex;flex-direction:column;align-items:center;gap:10px;">
+  <!-- Scroll indicator — oculto en mobile via CSS -->
+  <div id="scroll-ind" style="position:absolute;right:7vw;bottom:7vh;z-index:5;display:flex;flex-direction:column;align-items:center;gap:10px;">
     <div style="width:24px;height:38px;border:1.5px solid rgba(251,246,238,.55);border-radius:14px;display:flex;justify-content:center;padding-top:7px;">
       <div style="width:4px;height:8px;border-radius:2px;background:#E7CF96;animation:scrollDot 1.6s ease-in-out infinite;"></div>
     </div>
@@ -95,47 +166,47 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
     <div style="display:flex;flex-direction:column;gap:22px;">
 
       <!-- Row 1 -->
-      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;border-radius:24px;overflow:hidden;box-shadow:0 18px 50px rgba(58,42,28,.08);">
+      <div id="mr1" style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;border-radius:24px;overflow:hidden;box-shadow:0 18px 50px rgba(58,42,28,.08);">
         <div data-reveal="left" style="background:#F0E4D2;padding:38px 40px;display:flex;flex-direction:column;justify-content:center;">
           <span style="font-family:'Figtree';font-weight:700;font-size:11.5px;letter-spacing:.22em;color:#B06A43;text-transform:uppercase;margin-bottom:12px;">El mito</span>
-          <p style="font-family:'Newsreader',serif;font-size:clamp(22px,2.4vw,30px);line-height:1.22;color:#7A5A3E;margin:0;text-decoration:line-through;text-decoration-color:rgba(176,106,67,.5);text-decoration-thickness:2px;">“Necesitas muchísimo dinero ahorrado para comprar casa.”</p>
+          <p style="font-family:'Newsreader',serif;font-size:clamp(20px,2.4vw,30px);line-height:1.22;color:#7A5A3E;margin:0;text-decoration:line-through;text-decoration-color:rgba(176,106,67,.5);text-decoration-thickness:2px;">"Necesitas muchísimo dinero ahorrado para comprar casa."</p>
         </div>
-        <div style="display:flex;align-items:center;justify-content:center;background:#F0E4D2;padding:0 6px;">
+        <div id="mr1-arrow" style="display:flex;align-items:center;justify-content:center;background:#F0E4D2;padding:0 6px;">
           <div style="width:48px;height:48px;border-radius:50%;background:#FBF6EE;display:flex;align-items:center;justify-content:center;font-size:20px;color:#BD933F;box-shadow:0 4px 14px rgba(58,42,28,.12);">→</div>
         </div>
         <div data-reveal="right" style="background:#3A2818;padding:38px 40px;display:flex;flex-direction:column;justify-content:center;">
           <span style="font-family:'Figtree';font-weight:700;font-size:11.5px;letter-spacing:.22em;color:#E7CF96;text-transform:uppercase;margin-bottom:12px;">La realidad</span>
-          <p style="font-family:'Newsreader',serif;font-size:clamp(22px,2.4vw,30px);line-height:1.22;color:#FBF6EE;margin:0;">Existen opciones reales de pago inicial, incluso si apenas empiezas o eres inmigrante.</p>
+          <p style="font-family:'Newsreader',serif;font-size:clamp(20px,2.4vw,30px);line-height:1.22;color:#FBF6EE;margin:0;">Existen opciones reales de pago inicial, incluso si apenas empiezas o eres inmigrante.</p>
         </div>
       </div>
 
-      <!-- Row 2 -->
-      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;border-radius:24px;overflow:hidden;box-shadow:0 18px 50px rgba(58,42,28,.08);">
-        <div data-reveal="left" style="background:#3A2818;padding:38px 40px;display:flex;flex-direction:column;justify-content:center;order:2;">
-          <span style="font-family:'Figtree';font-weight:700;font-size:11.5px;letter-spacing:.22em;color:#E7CF96;text-transform:uppercase;margin-bottom:12px;">La realidad</span>
-          <p style="font-family:'Newsreader',serif;font-size:clamp(22px,2.4vw,30px);line-height:1.22;color:#FBF6EE;margin:0;">Diseñamos un plan personalizado para construir y aprovechar tu crédito, paso a paso.</p>
+      <!-- Row 2 — en desktop: Realidad izq, Mito der (via order). Mobile colapsa y mantiene Mito→Realidad -->
+      <div id="mr2" style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;border-radius:24px;overflow:hidden;box-shadow:0 18px 50px rgba(58,42,28,.08);">
+        <div id="mr2-mito" data-reveal="right" style="background:#F0E4D2;padding:38px 40px;display:flex;flex-direction:column;justify-content:center;order:0;">
+          <span style="font-family:'Figtree';font-weight:700;font-size:11.5px;letter-spacing:.22em;color:#B06A43;text-transform:uppercase;margin-bottom:12px;">El mito</span>
+          <p style="font-family:'Newsreader',serif;font-size:clamp(20px,2.4vw,30px);line-height:1.22;color:#7A5A3E;margin:0;text-decoration:line-through;text-decoration-color:rgba(176,106,67,.5);text-decoration-thickness:2px;">"Mi crédito no es perfecto, así que no califico."</p>
         </div>
-        <div style="display:flex;align-items:center;justify-content:center;background:#F0E4D2;padding:0 6px;order:1;">
+        <div id="mr2-arrow" style="display:flex;align-items:center;justify-content:center;background:#F0E4D2;padding:0 6px;order:1;">
           <div style="width:48px;height:48px;border-radius:50%;background:#FBF6EE;display:flex;align-items:center;justify-content:center;font-size:20px;color:#BD933F;box-shadow:0 4px 14px rgba(58,42,28,.12);transform:scaleX(-1);">→</div>
         </div>
-        <div data-reveal="right" style="background:#F0E4D2;padding:38px 40px;display:flex;flex-direction:column;justify-content:center;order:0;">
-          <span style="font-family:'Figtree';font-weight:700;font-size:11.5px;letter-spacing:.22em;color:#B06A43;text-transform:uppercase;margin-bottom:12px;">El mito</span>
-          <p style="font-family:'Newsreader',serif;font-size:clamp(22px,2.4vw,30px);line-height:1.22;color:#7A5A3E;margin:0;text-decoration:line-through;text-decoration-color:rgba(176,106,67,.5);text-decoration-thickness:2px;">“Mi crédito no es perfecto, así que no califico.”</p>
+        <div id="mr2-realidad" data-reveal="left" style="background:#3A2818;padding:38px 40px;display:flex;flex-direction:column;justify-content:center;order:2;">
+          <span style="font-family:'Figtree';font-weight:700;font-size:11.5px;letter-spacing:.22em;color:#E7CF96;text-transform:uppercase;margin-bottom:12px;">La realidad</span>
+          <p style="font-family:'Newsreader',serif;font-size:clamp(20px,2.4vw,30px);line-height:1.22;color:#FBF6EE;margin:0;">Diseñamos un plan personalizado para construir y aprovechar tu crédito, paso a paso.</p>
         </div>
       </div>
 
       <!-- Row 3 -->
-      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;border-radius:24px;overflow:hidden;box-shadow:0 18px 50px rgba(58,42,28,.08);">
+      <div id="mr3" style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;border-radius:24px;overflow:hidden;box-shadow:0 18px 50px rgba(58,42,28,.08);">
         <div data-reveal="left" style="background:#F0E4D2;padding:38px 40px;display:flex;flex-direction:column;justify-content:center;">
           <span style="font-family:'Figtree';font-weight:700;font-size:11.5px;letter-spacing:.22em;color:#B06A43;text-transform:uppercase;margin-bottom:12px;">El mito</span>
-          <p style="font-family:'Newsreader',serif;font-size:clamp(22px,2.4vw,30px);line-height:1.22;color:#7A5A3E;margin:0;text-decoration:line-through;text-decoration-color:rgba(176,106,67,.5);text-decoration-thickness:2px;">“No hablo inglés y me voy a perder en el papeleo.”</p>
+          <p style="font-family:'Newsreader',serif;font-size:clamp(20px,2.4vw,30px);line-height:1.22;color:#7A5A3E;margin:0;text-decoration:line-through;text-decoration-color:rgba(176,106,67,.5);text-decoration-thickness:2px;">"No hablo inglés y me voy a perder en el papeleo."</p>
         </div>
-        <div style="display:flex;align-items:center;justify-content:center;background:#F0E4D2;padding:0 6px;">
+        <div id="mr3-arrow" style="display:flex;align-items:center;justify-content:center;background:#F0E4D2;padding:0 6px;">
           <div style="width:48px;height:48px;border-radius:50%;background:#FBF6EE;display:flex;align-items:center;justify-content:center;font-size:20px;color:#BD933F;box-shadow:0 4px 14px rgba(58,42,28,.12);">→</div>
         </div>
         <div data-reveal="right" style="background:#3A2818;padding:38px 40px;display:flex;flex-direction:column;justify-content:center;">
           <span style="font-family:'Figtree';font-weight:700;font-size:11.5px;letter-spacing:.22em;color:#E7CF96;text-transform:uppercase;margin-bottom:12px;">La realidad</span>
-          <p style="font-family:'Newsreader',serif;font-size:clamp(22px,2.4vw,30px);line-height:1.22;color:#FBF6EE;margin:0;">Te acompaño en español en cada paso, traduciendo todo a algo claro y humano.</p>
+          <p style="font-family:'Newsreader',serif;font-size:clamp(20px,2.4vw,30px);line-height:1.22;color:#FBF6EE;margin:0;">Te acompaño en español en cada paso, traduciendo todo a algo claro y humano.</p>
         </div>
       </div>
 
@@ -145,20 +216,20 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
 
 <!-- ============ SOBRE IVANNA ============ -->
 <section id="sobre" data-screen-label="Sobre Ivanna" style="background:#F3EBDD;padding:clamp(80px,11vh,140px) 7vw;scroll-margin-top:90px;overflow:hidden;">
-  <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:0.9fr 1.1fr;gap:clamp(36px,5vw,80px);align-items:center;">
-    <div data-reveal="left" style="position:relative;">
-      <div style="position:relative;border-radius:24px;overflow:hidden;box-shadow:0 30px 70px rgba(58,42,28,.22);aspect-ratio:4/5;">
-        <img src="assets/ivanna.png" alt="Ivanna Soto, Realtor" style="width:100%;height:100%;object-fit:cover;">
+  <div id="sobre-g" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:0.9fr 1.1fr;gap:clamp(36px,5vw,80px);align-items:center;">
+    <div id="sobre-reveal-left" data-reveal="left" style="position:relative;">
+      <div id="sobre-img-wrap" style="position:relative;border-radius:24px;overflow:hidden;box-shadow:0 30px 70px rgba(58,42,28,.22);aspect-ratio:4/5;">
+        <img src="assets/ivanna.png" alt="Ivanna Soto, Realtor" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
       </div>
-      <div style="position:absolute;bottom:-22px;left:-22px;background:#FBF6EE;border-radius:18px;padding:18px 24px;box-shadow:0 18px 40px rgba(58,42,28,.16);">
+      <div id="sobre-badge" style="position:absolute;bottom:-22px;left:-22px;background:#FBF6EE;border-radius:18px;padding:18px 24px;box-shadow:0 18px 40px rgba(58,42,28,.16);">
         <div style="font-family:'Newsreader',serif;font-size:22px;color:#3A2A1C;line-height:1;">Ivanna Soto</div>
         <div style="font-family:'Figtree';font-size:12px;letter-spacing:.14em;color:#BD933F;margin-top:5px;text-transform:uppercase;font-weight:600;">Realtor · GA &amp; FL</div>
       </div>
     </div>
     <div data-reveal="right">
       <span style="font-family:'Figtree';font-weight:600;font-size:12.5px;letter-spacing:.24em;color:#BD933F;text-transform:uppercase;">Sobre Ivanna</span>
-      <h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:clamp(30px,4.2vw,52px);line-height:1.08;color:#3A2A1C;margin:16px 0 22px;letter-spacing:-.01em;">No soy una realtor tradicional. Soy tu <span style="font-style:italic;color:#BD933F;">aliada</span> en este camino.</h2>
-      <p style="font-family:'Figtree';font-size:17px;line-height:1.65;color:#6E5742;margin:0 0 18px;">Como <strong style="color:#3A2A1C;font-weight:600;">Real Estate &amp; Lifestyle Creator</strong>, construí una comunidad para romper una idea que escucho demasiado: “yo no puedo comprar casa”. Sí puedes. Y mi trabajo es mostrarte cómo.</p>
+      <h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:clamp(28px,4.2vw,52px);line-height:1.08;color:#3A2A1C;margin:16px 0 22px;letter-spacing:-.01em;">No soy una realtor tradicional. Soy tu <span style="font-style:italic;color:#BD933F;">aliada</span> en este camino.</h2>
+      <p style="font-family:'Figtree';font-size:17px;line-height:1.65;color:#6E5742;margin:0 0 18px;">Como <strong style="color:#3A2A1C;font-weight:600;">Real Estate &amp; Lifestyle Creator</strong>, construí una comunidad para romper una idea que escucho demasiado: "yo no puedo comprar casa". Sí puedes. Y mi trabajo es mostrarte cómo.</p>
       <p style="font-family:'Figtree';font-size:17px;line-height:1.65;color:#6E5742;margin:0 0 30px;">Acompaño a familias inmigrantes y latinas en Georgia y Florida con cercanía, información honesta y todo el proceso en tu idioma. Comprar tu casa no es un privilegio de pocos: es una meta alcanzable con la guía correcta.</p>
       <div style="display:flex;flex-wrap:wrap;gap:12px;">
         <div style="display:inline-flex;align-items:center;gap:9px;padding:10px 18px;background:#FBF6EE;border-radius:999px;border:1px solid rgba(58,42,28,.10);"><span style="color:#BD933F;">✦</span><span style="font-family:'Figtree';font-weight:500;font-size:14.5px;color:#3A2A1C;">100% en español</span></div>
@@ -175,15 +246,15 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
     <div data-reveal="up" style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:48px;">
       <div style="max-width:600px;">
         <span style="font-family:'Figtree';font-weight:600;font-size:12.5px;letter-spacing:.24em;color:#BD933F;text-transform:uppercase;">Propiedades</span>
-        <h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:clamp(32px,4.6vw,58px);line-height:1.06;color:#3A2A1C;margin:14px 0 0;letter-spacing:-.01em;">Casas hechas para vivir, no solo para mostrar.</h2>
+        <h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:clamp(28px,4.6vw,58px);line-height:1.06;color:#3A2A1C;margin:14px 0 0;letter-spacing:-.01em;">Casas hechas para vivir, no solo para mostrar.</h2>
       </div>
       <span style="font-family:'Figtree';font-size:11.5px;letter-spacing:.04em;color:#A88B6B;background:#F0E4D2;padding:8px 14px;border-radius:8px;font-weight:500;">PENDIENTE · reemplazar con listings reales de Ivanna</span>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(200px,1fr);gap:18px;">
-      <!-- Big -->
-      <div data-reveal="up" style="grid-column:span 2;grid-row:span 2;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 18px 44px rgba(58,42,28,.12);min-height:420px;">
-        <img src="assets/house-exterior.png" alt="Residencia familiar en suburbio de Georgia" style="width:100%;height:100%;object-fit:cover;transition:transform .8s ease;" style-hover="transform:scale(1.05);">
+    <div id="bento-g" style="display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(200px,1fr);gap:18px;">
+      <!-- Big — destacada -->
+      <div id="bento-big" data-reveal="up" style="grid-column:span 2;grid-row:span 2;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 18px 44px rgba(58,42,28,.12);min-height:420px;">
+        <img src="assets/house-exterior.png" alt="Residencia familiar en suburbio de Georgia" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform .8s ease;" style-hover="transform:scale(1.05);">
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(40,26,14,.82));pointer-events:none;"></div>
         <div style="position:absolute;top:18px;left:18px;background:rgba(251,246,238,.92);padding:7px 14px;border-radius:999px;font-family:'Figtree';font-weight:600;font-size:12px;color:#3A2A1C;">★ Destacada</div>
         <div style="position:absolute;left:24px;right:24px;bottom:24px;color:#FBF6EE;">
@@ -193,8 +264,8 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
         </div>
       </div>
       <!-- Wide -->
-      <div data-reveal="up" style="grid-column:span 2;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 18px 44px rgba(58,42,28,.12);">
-        <img src="assets/kitchen.png" alt="Cocina moderna y luminosa" style="width:100%;height:100%;object-fit:cover;transition:transform .8s ease;" style-hover="transform:scale(1.05);">
+      <div id="bento-wide" data-reveal="up" style="grid-column:span 2;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 18px 44px rgba(58,42,28,.12);">
+        <img src="assets/kitchen.png" alt="Cocina moderna y luminosa" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform .8s ease;" style-hover="transform:scale(1.05);">
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(40,26,14,.78));pointer-events:none;"></div>
         <div style="position:absolute;left:22px;right:22px;bottom:20px;color:#FBF6EE;">
           <div style="font-family:'Newsreader',serif;font-size:22px;line-height:1.1;">Cocinas para reunir a la familia</div>
@@ -202,14 +273,14 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
         </div>
       </div>
       <!-- Small 1 -->
-      <div data-reveal="up" style="grid-column:span 1;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 18px 44px rgba(58,42,28,.12);">
-        <img src="assets/living-room.png" alt="Sala de estar cálida" style="width:100%;height:100%;object-fit:cover;transition:transform .8s ease;" style-hover="transform:scale(1.05);">
+      <div id="bento-s1" data-reveal="up" style="grid-column:span 1;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 18px 44px rgba(58,42,28,.12);">
+        <img src="assets/living-room.png" alt="Sala de estar cálida" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform .8s ease;" style-hover="transform:scale(1.05);">
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(40,26,14,.7));pointer-events:none;"></div>
         <div style="position:absolute;left:18px;right:18px;bottom:16px;color:#FBF6EE;font-family:'Newsreader',serif;font-size:18px;line-height:1.1;">Espacios abiertos</div>
       </div>
       <!-- Small 2 -->
-      <div data-reveal="up" style="grid-column:span 1;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 18px 44px rgba(58,42,28,.12);">
-        <img src="assets/backyard.png" alt="Patio trasero al atardecer" style="width:100%;height:100%;object-fit:cover;transition:transform .8s ease;" style-hover="transform:scale(1.05);">
+      <div id="bento-s2" data-reveal="up" style="grid-column:span 1;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 18px 44px rgba(58,42,28,.12);">
+        <img src="assets/backyard.png" alt="Patio trasero al atardecer" loading="lazy" style="width:100%;height:100%;object-fit:cover;transition:transform .8s ease;" style-hover="transform:scale(1.05);">
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(40,26,14,.7));pointer-events:none;"></div>
         <div style="position:absolute;left:18px;right:18px;bottom:16px;color:#FBF6EE;font-family:'Newsreader',serif;font-size:18px;line-height:1.1;">Patios para tu gente</div>
       </div>
@@ -222,13 +293,13 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
   <div style="max-width:1280px;margin:0 auto;">
     <div data-reveal="up" style="max-width:680px;margin-bottom:52px;">
       <span style="font-family:'Figtree';font-weight:600;font-size:12.5px;letter-spacing:.24em;color:#E7CF96;text-transform:uppercase;">Comunidad</span>
-      <h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:clamp(32px,4.6vw,58px);line-height:1.06;color:#FBF6EE;margin:14px 0 16px;letter-spacing:-.01em;">Más allá de las llaves: <span style="font-style:italic;color:#E7CF96;">la comunidad.</span></h2>
+      <h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:clamp(28px,4.6vw,58px);line-height:1.06;color:#FBF6EE;margin:14px 0 16px;letter-spacing:-.01em;">Más allá de las llaves: <span style="font-style:italic;color:#E7CF96;">la comunidad.</span></h2>
       <p style="font-family:'Figtree';font-size:17px;line-height:1.65;color:rgba(244,232,207,.85);margin:0;">Mi trabajo no termina en una venta. Creo en sembrar comunidad: encuentros, educación y apoyo para que los latinos en Atlanta se sientan en casa, mucho antes de tener una.</p>
     </div>
 
-    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:18px;">
+    <div id="com-grid" style="display:grid;grid-template-columns:1.4fr 1fr;gap:18px;">
       <div data-reveal="left" style="position:relative;border-radius:22px;overflow:hidden;min-height:380px;box-shadow:0 24px 60px rgba(0,0,0,.3);">
-        <img src="assets/community.png" alt="Encuentro comunitario latino en Atlanta" style="width:100%;height:100%;object-fit:cover;">
+        <img src="assets/community.png" alt="Encuentro comunitario latino en Atlanta" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(26,16,8,.8));pointer-events:none;"></div>
         <div style="position:absolute;left:24px;right:24px;bottom:24px;color:#FBF6EE;">
           <div style="font-family:'Newsreader',serif;font-size:24px;line-height:1.12;margin-bottom:6px;">Eventos que unen a nuestra gente</div>
@@ -239,12 +310,12 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
 
       <div style="display:grid;grid-template-rows:1fr 1fr;gap:18px;">
         <div data-reveal="right" style="position:relative;border-radius:22px;overflow:hidden;min-height:181px;box-shadow:0 24px 60px rgba(0,0,0,.3);">
-          <img src="assets/atlanta-skyline.png" alt="Atardecer sobre Atlanta" style="width:100%;height:100%;object-fit:cover;">
+          <img src="assets/atlanta-skyline.png" alt="Atardecer sobre Atlanta" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
           <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(26,16,8,.72));pointer-events:none;"></div>
           <div style="position:absolute;left:20px;bottom:18px;color:#FBF6EE;font-family:'Newsreader',serif;font-size:20px;">Hecho en Atlanta</div>
         </div>
         <div data-reveal="right" style="border-radius:22px;background:#4A3623;padding:30px;display:flex;flex-direction:column;justify-content:center;border:1px solid rgba(231,207,150,.18);">
-          <div style="font-family:'Newsreader',serif;font-style:italic;font-size:clamp(20px,2.4vw,28px);line-height:1.3;color:#FBF6EE;">“Cuando una familia compra su casa, toda la comunidad gana.”</div>
+          <div style="font-family:'Newsreader',serif;font-style:italic;font-size:clamp(18px,2.4vw,28px);line-height:1.3;color:#FBF6EE;">"Cuando una familia compra su casa, toda la comunidad gana."</div>
           <div style="font-family:'Figtree';font-size:13px;color:#E7CF96;margin-top:14px;letter-spacing:.04em;">— Ivanna Soto</div>
         </div>
       </div>
@@ -256,20 +327,20 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
 <section data-parallax-scope style="position:relative;background:#271A10;padding:clamp(90px,14vh,170px) 7vw;overflow:hidden;">
   <div style="position:relative;z-index:5;text-align:center;max-width:760px;margin:0 auto;pointer-events:none;">
     <span data-reveal="up" style="display:inline-block;font-family:'Figtree';font-weight:600;font-size:12.5px;letter-spacing:.24em;color:#E7CF96;text-transform:uppercase;">La vida que te espera</span>
-    <h2 data-reveal="up" style="font-family:'Newsreader',serif;font-weight:500;font-size:clamp(34px,5.4vw,70px);line-height:1.04;color:#FBF6EE;margin:16px 0 0;letter-spacing:-.01em;">Imagina los días que vas a vivir aquí.</h2>
+    <h2 data-reveal="up" style="font-family:'Newsreader',serif;font-weight:500;font-size:clamp(30px,5.4vw,70px);line-height:1.04;color:#FBF6EE;margin:16px 0 0;letter-spacing:-.01em;">Imagina los días que vas a vivir aquí.</h2>
   </div>
-  <div style="position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:64px;max-width:1180px;margin-left:auto;margin-right:auto;">
+  <div id="par-grid" style="position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:64px;max-width:1180px;margin-left:auto;margin-right:auto;">
     <div style="display:flex;flex-direction:column;gap:20px;" data-parallax="-8">
-      <img src="assets/hero-family.png" alt="" style="width:100%;border-radius:18px;object-fit:cover;aspect-ratio:4/5;box-shadow:0 24px 60px rgba(0,0,0,.4);">
-      <img src="assets/backyard.png" alt="" style="width:100%;border-radius:18px;object-fit:cover;aspect-ratio:4/5;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+      <img src="assets/hero-family.png" alt="" loading="lazy" style="width:100%;border-radius:18px;object-fit:cover;aspect-ratio:4/5;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+      <img src="assets/backyard.png" alt="" loading="lazy" style="width:100%;border-radius:18px;object-fit:cover;aspect-ratio:4/5;box-shadow:0 24px 60px rgba(0,0,0,.4);">
     </div>
-    <div style="display:flex;flex-direction:column;gap:20px;transform:translateY(40px);" data-parallax="9">
-      <img src="assets/living-room.png" alt="" style="width:100%;border-radius:18px;object-fit:cover;aspect-ratio:4/5;box-shadow:0 24px 60px rgba(0,0,0,.4);">
-      <img src="assets/kitchen.png" alt="" style="width:100%;border-radius:18px;object-fit:cover;aspect-ratio:4/5;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+    <div id="par-col-mid" style="display:flex;flex-direction:column;gap:20px;transform:translateY(40px);" data-parallax="9">
+      <img src="assets/living-room.png" alt="" loading="lazy" style="width:100%;border-radius:18px;object-fit:cover;aspect-ratio:4/5;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+      <img src="assets/kitchen.png" alt="" loading="lazy" style="width:100%;border-radius:18px;object-fit:cover;aspect-ratio:4/5;box-shadow:0 24px 60px rgba(0,0,0,.4);">
     </div>
     <div style="display:flex;flex-direction:column;gap:20px;" data-parallax="-13">
-      <img src="assets/house-exterior.png" alt="" style="width:100%;border-radius:18px;object-fit:cover;aspect-ratio:4/5;box-shadow:0 24px 60px rgba(0,0,0,.4);">
-      <img src="assets/community.png" alt="" style="width:100%;border-radius:18px;object-fit:cover;aspect-ratio:4/5;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+      <img src="assets/house-exterior.png" alt="" loading="lazy" style="width:100%;border-radius:18px;object-fit:cover;aspect-ratio:4/5;box-shadow:0 24px 60px rgba(0,0,0,.4);">
+      <img src="assets/community.png" alt="" loading="lazy" style="width:100%;border-radius:18px;object-fit:cover;aspect-ratio:4/5;box-shadow:0 24px 60px rgba(0,0,0,.4);">
     </div>
   </div>
 </section>
@@ -279,7 +350,7 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
   <div style="position:absolute;top:-120px;right:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(189,147,63,.22),transparent 70%);pointer-events:none;"></div>
   <div data-reveal="up" style="position:relative;max-width:780px;margin:0 auto;text-align:center;">
     <span style="font-family:'Figtree';font-weight:600;font-size:12.5px;letter-spacing:.24em;color:#BD933F;text-transform:uppercase;">¿Lista para empezar?</span>
-    <h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:clamp(36px,6vw,76px);line-height:1.03;color:#3A2A1C;margin:18px 0 20px;letter-spacing:-.015em;text-wrap:balance;">Tu primera casa empieza con una <span style="font-style:italic;color:#BD933F;">conversación.</span></h2>
+    <h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:clamp(32px,6vw,76px);line-height:1.03;color:#3A2A1C;margin:18px 0 20px;letter-spacing:-.015em;text-wrap:balance;">Tu primera casa empieza con una <span style="font-style:italic;color:#BD933F;">conversación.</span></h2>
     <p style="font-family:'Figtree';font-size:18px;line-height:1.6;color:#6E5742;margin:0 auto 38px;max-width:46ch;">Sin compromisos, sin letra chica. Escríbeme y demos juntos el primer paso, en español y a tu ritmo.</p>
     <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;">
       <a href="{{ igUrl }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:11px;padding:18px 34px;background:#BD933F;color:#FFFDF8;border-radius:999px;font-family:'Figtree';font-weight:600;font-size:17px;text-decoration:none;box-shadow:0 16px 42px rgba(189,147,63,.42);transition:all .2s;" style-hover="background:#A87D2E;transform:translateY(-2px);">Comienza Tu Camino <span style="font-size:18px;">→</span></a>
@@ -291,9 +362,9 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
 <!-- ============ FOOTER MARQUEE ============ -->
 <footer style="background:#271A10;color:#FBF6EE;overflow:hidden;">
   <div style="padding:34px 0;border-bottom:1px solid rgba(231,207,150,.14);overflow:hidden;white-space:nowrap;">
-    <div style="display:inline-flex;animation:marqueeScroll 30s linear infinite;will-change:transform;">
-      <span style="font-family:'Newsreader',serif;font-style:italic;font-size:clamp(32px,5vw,64px);color:#E7CF96;padding-right:0;">TU REALTOR DE CONFIANZA EN GEORGIA&nbsp;&nbsp;✦&nbsp;&nbsp;TU REALTOR DE CONFIANZA EN GEORGIA&nbsp;&nbsp;✦&nbsp;&nbsp;TU REALTOR DE CONFIANZA EN GEORGIA&nbsp;&nbsp;✦&nbsp;&nbsp;</span>
-      <span style="font-family:'Newsreader',serif;font-style:italic;font-size:clamp(32px,5vw,64px);color:#E7CF96;">TU REALTOR DE CONFIANZA EN GEORGIA&nbsp;&nbsp;✦&nbsp;&nbsp;TU REALTOR DE CONFIANZA EN GEORGIA&nbsp;&nbsp;✦&nbsp;&nbsp;TU REALTOR DE CONFIANZA EN GEORGIA&nbsp;&nbsp;✦&nbsp;&nbsp;</span>
+    <div id="marquee-inner" style="display:inline-flex;animation:marqueeScroll 30s linear infinite;will-change:transform;">
+      <span style="font-family:'Newsreader',serif;font-style:italic;font-size:clamp(28px,5vw,64px);color:#E7CF96;padding-right:0;">TU REALTOR DE CONFIANZA EN GEORGIA&nbsp;&nbsp;✦&nbsp;&nbsp;TU REALTOR DE CONFIANZA EN GEORGIA&nbsp;&nbsp;✦&nbsp;&nbsp;TU REALTOR DE CONFIANZA EN GEORGIA&nbsp;&nbsp;✦&nbsp;&nbsp;</span>
+      <span style="font-family:'Newsreader',serif;font-style:italic;font-size:clamp(28px,5vw,64px);color:#E7CF96;">TU REALTOR DE CONFIANZA EN GEORGIA&nbsp;&nbsp;✦&nbsp;&nbsp;TU REALTOR DE CONFIANZA EN GEORGIA&nbsp;&nbsp;✦&nbsp;&nbsp;TU REALTOR DE CONFIANZA EN GEORGIA&nbsp;&nbsp;✦&nbsp;&nbsp;</span>
     </div>
   </div>
   <div style="max-width:1280px;margin:0 auto;padding:40px 7vw;display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;align-items:flex-start;">
@@ -318,6 +389,14 @@ body{margin:0;font-family:'Figtree',sans-serif;background:#FBF6EE;color:#3A2A1C;
   </div>
 </footer>
 
+<!-- ============ MOBILE STICKY CTA ============ -->
+<!-- Oculto en desktop via CSS; visible solo en ≤767px -->
+<div id="m-cta" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9990;padding:10px 16px 18px;background:linear-gradient(0deg,rgba(39,26,16,.97) 60%,rgba(39,26,16,0) 100%);pointer-events:none;">
+  <a href="#contacto" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:15px 20px;background:#BD933F;color:#FFFDF8;border-radius:999px;font-family:'Figtree';font-weight:600;font-size:16px;text-decoration:none;box-shadow:0 8px 28px rgba(189,147,63,.52);pointer-events:auto;text-align:center;white-space:nowrap;">
+    Comienza Tu Camino&nbsp;→
+  </a>
+</div>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:860},&quot;showLoader&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;instagramUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://instagram.com/ivannasoto.realtor&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
@@ -335,10 +414,20 @@ class Component extends DCLogic {
       this.setState({ loaded: true, gone: true });
     }
 
-    // ensure video autoplays
+    // Video: autoplay en desktop, omitir en mobile para ahorrar datos
     setTimeout(() => {
       const v = document.getElementById('heroVideo');
-      if (v) { v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+      if (v) {
+        if (window.matchMedia('(max-width:767px)').matches) {
+          // En mobile: detener descarga del video; el poster queda visible
+          v.pause();
+          try { v.src = ''; v.load(); } catch(e) {}
+        } else {
+          v.muted = true;
+          const p = v.play();
+          if (p && p.catch) p.catch(() => {});
+        }
+      }
     }, 200);
 
     this.waitForGsap();
@@ -387,7 +476,10 @@ class Component extends DCLogic {
     const gsap = window.gsap;
     gsap.registerPlugin(window.ScrollTrigger);
 
-    // hero headline word stagger
+    // Detectar mobile una sola vez — no cambia durante la sesión
+    const isMobile = window.matchMedia('(max-width:767px)').matches;
+
+    // Hero headline word stagger — igual en todos los breakpoints
     gsap.set('[data-hero-word]', { yPercent: 115, opacity: 0 });
     gsap.to('[data-hero-word]', {
       yPercent: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
@@ -398,20 +490,24 @@ class Component extends DCLogic {
       stagger: 0.14, delay: this.heroDelay + 0.6
     });
 
-    // scroll reveals
+    // Scroll reveals
+    // En mobile: sin offset horizontal para evitar overflow — solo fade+slide vertical
     gsap.utils.toArray('[data-reveal]').forEach((el) => {
       const dir = el.getAttribute('data-reveal');
-      const x = dir === 'left' ? -64 : dir === 'right' ? 64 : 0;
-      const y = (dir === 'up' || dir === '' || dir === null) ? 52 : 0;
+      let x = dir === 'left' ? -64 : dir === 'right' ? 64 : 0;
+      const y = (!dir || dir === 'up') ? 52 : 0;
+      if (isMobile) x = 0; // evita scroll horizontal en pantallas angostas
       gsap.from(el, {
         x, y, opacity: 0, duration: 1.05, ease: 'power3.out',
         scrollTrigger: { trigger: el, start: 'top 84%' }
       });
     });
 
-    // parallax columns
+    // Parallax columns
+    // En mobile: reducir intensidad al 25% para evitar jank en gama media
     gsap.utils.toArray('[data-parallax]').forEach((el) => {
-      const speed = parseFloat(el.getAttribute('data-parallax')) || 0;
+      let speed = parseFloat(el.getAttribute('data-parallax')) || 0;
+      if (isMobile) speed = speed * 0.25;
       const scope = el.closest('[data-parallax-scope]') || el;
       gsap.to(el, {
         yPercent: speed, ease: 'none',
